@@ -10,24 +10,31 @@ import java.sql.SQLException;
 public class UserDOA {
     private static final String DATABASE_URL = "jdbc:sqlite:identifier.sqlite";
 
-    private Connection connect() {
-        Connection conn = null;
-        try {
-            conn = DriverManager.getConnection(DATABASE_URL);
-        } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-        return conn;
+//    private Connection connect() {
+//        Connection conn = null;
+//        try {
+//            conn = DriverManager.getConnection(DATABASE_URL);
+//        } catch (SQLException e) {
+//            System.out.println("Error: " + e.getMessage());
+//        }
+//        return conn;
+//    }
+
+    public UserDOA() {
+
     }
 
     public void insert(User user) {
         String sql = "INSERT INTO Users(username, role, hashed_password) VALUES(?, ?, ?)";
 
-        try (Connection conn = this.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try {
+            Connection conn = DriverManager.getConnection(DATABASE_URL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, user.getUsername());
-            pstmt.setString(2, user.getHashedPassword());
-            pstmt.setString(3, user.getRole());
+            pstmt.setString(2, user.getRole());
+            pstmt.setString(3, user.getHashedPassword());
+            pstmt.execute();
+            pstmt.close();
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -37,8 +44,9 @@ public class UserDOA {
         String sql = "SELECT user_id FROM Users WHERE username = ?";
         boolean isTaken = false;
 
-        try (Connection conn = this.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try {
+            Connection conn = DriverManager.getConnection(DATABASE_URL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, username);
             ResultSet rs = pstmt.executeQuery();
 
@@ -46,6 +54,7 @@ public class UserDOA {
             if (rs.next()) {
                 isTaken = true;
             }
+            pstmt.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
