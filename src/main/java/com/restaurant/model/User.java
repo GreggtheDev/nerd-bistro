@@ -1,6 +1,6 @@
 package com.restaurant.model;
 
-import com.restaurant.dao.UserDOA;
+import com.restaurant.dao.UserDAO;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -17,7 +17,7 @@ public class User {
     private String role;
 
     public User(String username, String password, String role) {
-        UserDOA userDOA = new UserDOA();
+        UserDAO userDOA = new UserDAO();
         Scanner scanner = new Scanner(System.in);
         boolean stop = false;
         while (!stop) {

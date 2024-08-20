@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
-public class UserDOA {
+public class UserDAO {
     private static final String DATABASE_URL = "jdbc:sqlite:identifier.sqlite";
 
 //    private Connection connect() {
@@ -22,7 +22,7 @@ public class UserDOA {
 //        return conn;
 //    }
 
-    public UserDOA() {
+    public UserDAO() {
 
     }
 

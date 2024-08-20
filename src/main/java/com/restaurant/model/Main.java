@@ -1,11 +1,11 @@
 package com.restaurant.model;
 
-import com.restaurant.dao.UserDOA;
+import com.restaurant.dao.UserDAO;
 
 public class Main {
     public static void main(String[] args) {
         User user = new User("test", "test", "staff");
-        UserDOA doa = new UserDOA();
+        UserDAO doa = new UserDAO();
 
         doa.insert(user);
     }
