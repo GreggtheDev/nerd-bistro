@@ -1,4 +1,4 @@
-package org.example;
+package com.restaurant;
 
 /** This is a POJO for User in nerdBistro
  *
