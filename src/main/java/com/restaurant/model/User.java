@@ -1,4 +1,4 @@
-package com.restaurant;
+package com.restaurant.model;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -13,7 +13,7 @@ public class User {
     private String username;
     private String password;
     private String role;
-    private UserDOA userDOA;
+    private String userDOA;
 
     public User(int id, String username, String password, String role) {
         this.id = id;
