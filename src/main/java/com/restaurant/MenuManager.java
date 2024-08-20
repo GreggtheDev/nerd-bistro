@@ -1,4 +1,6 @@
-package org.example;
+package com.restaurant;
+
+import com.restaurant.model.MenuItem;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -54,7 +56,7 @@ public class MenuManager {
                 double price = rs.getDouble("price");
                 String ingredients = rs.getString("ingredients");
 
-                MenuItem item = new MenuItem(name, description, prepTime, price, List.of(ingredients.split(",")));
+                MenuItem item = new MenuItem(name, description, prepTime, price, List.of(ingredients.split(",")),);
                 menuItems.add(item);
             }
         } catch (SQLException e) {
