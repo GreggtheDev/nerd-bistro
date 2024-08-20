@@ -1,4 +1,6 @@
-package org.example;
+package com.restaurant.model;
+
+import com.restaurant.dao.UserDOA;
 
 public class Main {
     public static void main(String[] args) {

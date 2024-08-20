@@ -1,4 +1,6 @@
-package org.example;
+package com.restaurant.model;
+
+import com.restaurant.dao.UserDOA;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
