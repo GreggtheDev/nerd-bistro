@@ -1,4 +1,4 @@
-package org.example;
+package com.restaurant;
 
 import java.util.List;
 

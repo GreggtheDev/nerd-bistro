@@ -1,21 +1,23 @@
-package org.example;
+package com.restaurant;
 
 import java.util.List;
 
 public class MenuItem {
     private String name;
     private String description;
-    private int prepTime;  // Changed from preparationTime to prepTime
+    private int prepTime;
     private double price;
     private List<String> ingredients;
+    private String category;  // New field for category
 
-    // Constructor
-    public MenuItem(String name, String description, int prepTime, double price, List<String> ingredients) {
+    // Updated constructor to include category
+    public MenuItem(String name, String description, int prepTime, double price, List<String> ingredients, String category) {
         this.name = name;
         this.description = description;
         this.prepTime = prepTime;
         this.price = price;
         this.ingredients = ingredients;
+        this.category = category;
     }
 
     // Getters and setters
@@ -59,14 +61,19 @@ public class MenuItem {
         this.ingredients = ingredients;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    // Updated toString method for better formatting
     @Override
     public String toString() {
-        return "MenuItem{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", prepTime=" + prepTime +
-                ", price=" + price +
-                ", ingredients=" + ingredients +
-                '}';
+        return String.format(
+                "Category: %s\nName: %s\nDescription: %s\nPreparation Time: %d minutes\nPrice: $%.2f\nIngredients: %s\n",
+                category, name, description, prepTime, price, ingredients);
     }
 }
