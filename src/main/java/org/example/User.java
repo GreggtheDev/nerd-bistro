@@ -1,5 +1,10 @@
 package org.example;
 
+/** This is a POJO for User in nerdBistro
+ *
+ * @author cjgarcia12
+ */
+
 public class User {
     private int id;
     private String username;
