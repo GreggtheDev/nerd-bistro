@@ -1,93 +1,75 @@
-package com.restaurant.model;
+package com.restaurant;
 
 import java.util.List;
 
-/**
- * The Order class represents a customer order in the restaurant management system.
- * It contains details about the order such as the items ordered, the total price,
- * and the current status of the order.
- */
 public class Order {
-
-    /**
-     * Unique identifier for the order.
-     */
-    private int id;
-
-    /**
-     * List of menu items that have been ordered.
-     */
-    private List<MenuItem> itemsOrdered;
-
-    /**
-     * The total price of all the items in the order.
-     */
+    private static int idCounter = 0;  // Static counter to generate unique order IDs
+    private int orderId;
+    private List<MenuItem> items;
     private double totalPrice;
+    private Status status;
 
-    /**
-     * The current status of the order. Can be "Waiting", "Preparing", or "Ready".
-     */
-    private String status; // Waiting, Preparing, Ready
+    // Enum to represent the status of the order
+    public enum Status {
+        WAITING,
+        PREPARING,
+        READY
+    }
 
-    /**
-     * Constructs an Order object with the specified id, list of items ordered,
-     * total price, and status.
-     *
-     * @param id            The unique identifier for the order.
-     * @param itemsOrdered  The list of menu items that have been ordered.
-     * @param totalPrice    The total price of the order.
-     * @param status        The current status of the order.
-     */
-    public Order(int id, List<MenuItem> itemsOrdered, double totalPrice, String status) {
-        this.id = id;
-        this.itemsOrdered = itemsOrdered;
+    // Constructor to create an order with a generated ID
+    public Order(List<MenuItem> items) {
+        this.orderId = ++idCounter;
+        this.items = items;
+        this.totalPrice = calculateTotalPrice();
+        this.status = Status.WAITING;  // Default status when the order is created
+    }
+
+    // Constructor to create an order with a specified ID (useful when loading from a database)
+    public Order(int orderId, List<MenuItem> items, double totalPrice, Status status) {
+        this.orderId = orderId;
+        this.items = items;
         this.totalPrice = totalPrice;
         this.status = status;
     }
 
-    /**
-     * Returns the unique identifier for the order.
-     *
-     * @return The order ID.
-     */
-    public int getId() {
-        return id;
+    // Method to calculate the total price of the order
+    private double calculateTotalPrice() {
+        return items.stream().mapToDouble(MenuItem::getPrice).sum();
     }
 
-    /**
-     * Returns the list of menu items that have been ordered.
-     *
-     * @return The list of items ordered.
-     */
-    public List<MenuItem> getItemsOrdered() {
-        return itemsOrdered;
+    // Getters and setters
+    public int getOrderId() {
+        return orderId;
     }
 
-    /**
-     * Returns the total price of all the items in the order.
-     *
-     * @return The total price of the order.
-     */
+    public List<MenuItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<MenuItem> items) {
+        this.items = items;
+        this.totalPrice = calculateTotalPrice();
+    }
+
     public double getTotalPrice() {
         return totalPrice;
     }
 
-    /**
-     * Returns the current status of the order.
-     *
-     * @return The order status.
-     */
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    /**
-     * Sets the status of the order.
-     *
-     * @param status The new status of the order.
-     */
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
-}
 
+    @Override
+    public String toString() {
+        return "Order{" +
+                "orderId=" + orderId +
+                ", items=" + items +
+                ", totalPrice=" + totalPrice +
+                ", status=" + status +
+                '}';
+    }
+}
