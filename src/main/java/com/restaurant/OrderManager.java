@@ -18,6 +18,10 @@ public class OrderManager {
         this.menuManager = menuManager;
     }
 
+    public OrderManager() {
+
+    }
+
     public void placeOrder(Order order) {
         orderDao.addOrder(order);
     }
