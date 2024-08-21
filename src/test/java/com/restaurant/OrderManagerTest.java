@@ -5,7 +5,6 @@ import com.restaurant.model.Order;
 import com.restaurant.model.MenuItem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.util.Arrays;
@@ -26,12 +25,13 @@ class OrderManagerTest {
         mockOrderDao = mock(OrderDao.class);
         mockMenuManager = mock(MenuManager.class);
 
-        // Use a spy for OrderManager so we can inject the mocks
-        orderManager = Mockito.spy(new OrderManager());
+        // Create an instance of OrderManager
+        orderManager = new OrderManager();
 
-        // Inject the mocks into the spy
-        Mockito.doReturn(mockOrderDao).when(orderManager).orderDao;
-        Mockito.doReturn(mockMenuManager).when(orderManager).menuManager;
+        // Use reflection or a custom constructor in OrderManager to inject mocks
+        orderManager = Mockito.spy(new OrderManager());
+        Mockito.doReturn(mockOrderDao).when(orderManager).orderDao = mockOrderDao;
+        Mockito.doReturn(mockMenuManager).when(orderManager).menuManager = mockMenuManager;
     }
 
     @Test
@@ -99,4 +99,3 @@ class OrderManagerTest {
         verify(mockOrderDao).deleteOrder(orderId);
     }
 }
-
