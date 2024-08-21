@@ -48,14 +48,15 @@ public class MenuManager {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                String name = rs.getString("name");
-                String description = rs.getString("description");
-                int prepTime = rs.getInt("prep_time");
-                double price = rs.getDouble("price");
-                String ingredients = rs.getString("ingredients");
-                String category = rs.getString("category");
-
-                MenuItem item = new MenuItem(name, description, prepTime, price, List.of(ingredients.split(",")), category);
+                MenuItem item = new MenuItem(
+                        rs.getInt("item_id"),  // Assuming the column is item_id
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getInt("prep_time"),
+                        rs.getDouble("price"),
+                        List.of(rs.getString("ingredients").split(",")),
+                        rs.getString("category")
+                );
                 menuItems.add(item);
             }
         } catch (SQLException e) {
@@ -78,6 +79,34 @@ public class MenuManager {
         }
     }
 
+    public MenuItem getMenuItemById(int id) {
+        String sql = "SELECT * FROM MenuItems WHERE item_id = ?";
+        MenuItem menuItem = null;
+
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                menuItem = new MenuItem(
+                        rs.getInt("item_id"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getInt("prep_time"),
+                        rs.getDouble("price"),
+                        List.of(rs.getString("ingredients").split(",")),
+                        rs.getString("category")
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        return menuItem;
+    }
+
     public MenuItem getMenuItemByName(String name) {
         String sql = "SELECT * FROM MenuItems WHERE name = ?";
         MenuItem menuItem = null;
@@ -89,13 +118,15 @@ public class MenuManager {
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                String description = rs.getString("description");
-                int prepTime = rs.getInt("prep_time");
-                double price = rs.getDouble("price");
-                String ingredients = rs.getString("ingredients");
-                String category = rs.getString("category");
-
-                menuItem = new MenuItem(name, description, prepTime, price, List.of(ingredients.split(",")), category);
+                menuItem = new MenuItem(
+                        rs.getInt("item_id"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getInt("prep_time"),
+                        rs.getDouble("price"),
+                        List.of(rs.getString("ingredients").split(",")),
+                        rs.getString("category")
+                );
             }
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());

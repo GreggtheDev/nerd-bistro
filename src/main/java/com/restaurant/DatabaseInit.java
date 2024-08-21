@@ -52,13 +52,15 @@ public class DatabaseInit {
                 + "    role VARCHAR NOT NULL\n"
                 + ");";
 
+
         String createMenuItemsTable = "CREATE TABLE IF NOT EXISTS MenuItems (\n"
                 + "    item_id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + "    name VARCHAR NOT NULL UNIQUE,\n"
                 + "    description VARCHAR NOT NULL,\n"
                 + "    prep_time INTEGER NOT NULL,\n"
                 + "    ingredients VARCHAR,\n"
-                + "    price REAL NOT NULL\n"
+                + "    price REAL NOT NULL,\n"
+                + "    category TEXT\n"
                 + ");";
 
         String createIngredientsTable = "CREATE TABLE IF NOT EXISTS Ingredients (\n"

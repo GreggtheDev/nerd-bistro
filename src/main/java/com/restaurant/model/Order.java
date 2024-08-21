@@ -1,57 +1,57 @@
 package com.restaurant.model;
 
+import com.restaurant.MenuManager;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.restaurant.model.MenuItem;
-
 public class Order {
-    private static int idCounter = 0;  // Static counter to generate unique order IDs
     private int orderId;
-    private List<MenuItem> items;
+    private long orderTime; // Time stored in milliseconds
     private double totalPrice;
     private Status status;
+    private List<MenuItem> items;
 
-    // Enum to represent the status of the order
     public enum Status {
-        WAITING,
-        PREPARING,
-        READY
+        WAITING, PREPARING, READY
     }
 
-    // Constructor to create an order with a generated ID
-    public Order(List<MenuItem> items) {
-        this.orderId = ++idCounter;
-        this.items = items;
-        this.totalPrice = calculateTotalPrice();
-        this.status = Status.WAITING;  // Default status when the order is created
-    }
-
-    // Constructor to create an order with a specified ID (useful when loading from a database)
+    // Constructor for a new order
     public Order(List<MenuItem> items, double totalPrice, Status status) {
-        this.orderId = idCounter++;
         this.items = items;
         this.totalPrice = totalPrice;
         this.status = status;
+        this.orderTime = System.currentTimeMillis();
     }
 
-    // Method to calculate the total price of the order
-    private double calculateTotalPrice() {
-        return items.stream().mapToDouble(MenuItem::getPrice).sum();
+    // Constructor for retrieving an order from the database
+    public Order(int orderId, long orderTime, double totalPrice, Status status, List<MenuItem> items) {
+        this.orderId = orderId;
+        this.orderTime = orderTime;
+        this.totalPrice = totalPrice;
+        this.status = status;
+        this.items = items;
     }
 
-    // Getters and setters
+    // Getters and Setters
+
     public int getOrderId() {
         return orderId;
     }
 
-    public List<MenuItem> getItems() {
-        return items;
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 
-    public void setItems(List<MenuItem> items) {
-        this.items = items;
-        this.totalPrice = calculateTotalPrice();
+    public long getOrderTime() {
+        return orderTime;
+    }
+
+    public String getFormattedOrderTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
+        return sdf.format(new Date(orderTime));
     }
 
     public double getTotalPrice() {
@@ -66,19 +66,35 @@ public class Order {
         this.status = status;
     }
 
+    public List<MenuItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<MenuItem> items) {
+        this.items = items;
+    }
+
+    // Converts the list of MenuItem objects to a comma-separated string of item IDs
     public String getItemsAsString() {
         return items.stream()
-                .map(MenuItem::getName)
+                .map(item -> String.valueOf(item.getId()))
                 .collect(Collectors.joining(","));
+    }
+
+    // Converts a comma-separated string of item IDs back to a list of MenuItem objects
+    public List<MenuItem> getItemsFromString(String itemsAsString) {
+        MenuManager menuManager = new MenuManager();
+        return itemsAsString.isEmpty() ?
+                List.of() :
+                List.of(itemsAsString.split(","))
+                        .stream()
+                        .map(id -> menuManager.getMenuItemById(Integer.parseInt(id)))
+                        .collect(Collectors.toList());
     }
 
     @Override
     public String toString() {
-        return "Order{" +
-                "orderId=" + orderId +
-                ", items=" + items +
-                ", totalPrice=" + totalPrice +
-                ", status=" + status +
-                '}';
+        return String.format("Order ID: %d, Order Time: %s, Total Price: %.2f, Status: %s, Items: %s",
+                orderId, getFormattedOrderTime(), totalPrice, status, getItemsAsString());
     }
 }
