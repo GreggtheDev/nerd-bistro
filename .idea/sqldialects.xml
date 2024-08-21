@@ -2,6 +2,7 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/src/main/java/com/restaurant/MenuManager.java" dialect="SQLite" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/restaurant/dao/TableDao.java" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/restaurant/dao/UserDAO.java" dialect="SQLite" />
   </component>
 </project>
