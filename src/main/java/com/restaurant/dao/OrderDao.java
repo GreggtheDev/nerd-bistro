@@ -26,7 +26,7 @@ public class OrderDao {
 
     // Method to update the status of an existing order
     public void updateOrderStatus(int orderId, Order.Status status) {
-        String query = "UPDATE orders SET status = ? WHERE id = ?";
+        String query = "UPDATE orders SET status = ? WHERE order_id = ?";
         try (Connection connection = DriverManager.getConnection(DATABASE_URL);
              PreparedStatement stmt = connection.prepareStatement(query)) {
 
