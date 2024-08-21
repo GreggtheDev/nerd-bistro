@@ -1,7 +1,5 @@
 package com.restaurant.dao;
 
-
-
 import com.restaurant.model.Order;
 
 import java.sql.*;
@@ -46,7 +44,7 @@ public class OrderDao {
      * @param status  The new status of the order.
      */
     public void updateOrderStatus(int orderId, String status) {
-        String query = "UPDATE orders SET status = ? WHERE order_id = ?";
+        String query = "UPDATE orders SET status = ? WHERE id = ?";
         try (Connection connection = DriverManager.getConnection(DATABASE_URL);
              PreparedStatement stmt = connection.prepareStatement(query)) {
 
@@ -86,7 +84,7 @@ public class OrderDao {
                             rs.getInt("id"),
                             null, // Items would need to be fetched separately
                             rs.getDouble("total_price"),
-                            rs.getString("status")
+                            Order.Status.valueOf(rs.getString("status").toUpperCase())
                     ));
                 }
             }
