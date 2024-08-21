@@ -8,6 +8,7 @@ import java.util.List;
 
 public class OrderManager {
 
+    public OrderDao orderDao;
     private OrderDao orderDao = new OrderDao();
     private MenuManager menuManager = new MenuManager();
 
