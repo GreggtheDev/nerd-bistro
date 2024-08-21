@@ -1,6 +1,8 @@
 package com.restaurant.model;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import com.restaurant.model.MenuItem;
 
 public class Order {
@@ -26,8 +28,8 @@ public class Order {
     }
 
     // Constructor to create an order with a specified ID (useful when loading from a database)
-    public Order(int orderId, List<MenuItem> items, double totalPrice, Status status) {
-        this.orderId = orderId;
+    public Order(List<MenuItem> items, double totalPrice, Status status) {
+        this.orderId = idCounter++;
         this.items = items;
         this.totalPrice = totalPrice;
         this.status = status;
@@ -62,6 +64,12 @@ public class Order {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getItemsAsString() {
+        return items.stream()
+                .map(MenuItem::getName)
+                .collect(Collectors.joining(","));
     }
 
     @Override
