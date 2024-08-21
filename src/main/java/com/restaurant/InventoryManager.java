@@ -5,7 +5,7 @@ import com.restaurant.dao.InventoryDAO;
 import com.restaurant.model.Ingredient;
 
 public class InventoryManager {
-    private InventoryDAO inventoryDAO;
+    private final InventoryDAO inventoryDAO;
 
     public InventoryManager(InventoryDAO inventoryDAO) {
         this.inventoryDAO = inventoryDAO;
