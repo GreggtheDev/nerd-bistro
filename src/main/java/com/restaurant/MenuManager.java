@@ -56,7 +56,7 @@ public class MenuManager {
                 double price = rs.getDouble("price");
                 String ingredients = rs.getString("ingredients");
 
-                MenuItem item = new MenuItem(name, description, prepTime, price, List.of(ingredients.split(",")),);
+                MenuItem item = new MenuItem(name, description, prepTime, price, List.of(ingredients.split(",")),"food");
                 menuItems.add(item);
             }
         } catch (SQLException e) {
@@ -97,7 +97,7 @@ public class MenuManager {
                 double price = rs.getDouble("price");
                 String ingredients = rs.getString("ingredients");
 
-                menuItem = new MenuItem(name, description, prepTime, price, List.of(ingredients.split(",")));
+                menuItem = new MenuItem(name, description, prepTime, price, List.of(ingredients.split(",")), "food");
             }
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());

@@ -1,4 +1,8 @@
-package org.example;
+package com.restaurant;
+
+import com.restaurant.MenuManager;
+import com.restaurant.Order;
+import com.restaurant.model.MenuItem;
 
 import java.sql.*;
 import java.util.ArrayList;
