@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import java.io.File;
+
 public class DatabaseInit {
 
     private static final String URL = "jdbc:sqlite:identifier.sqlite";
@@ -22,7 +24,23 @@ public class DatabaseInit {
     }
 
     public DatabaseInit() {
+        createNewDatabase();
         createAllTables();
+    }
+
+    public static void createNewDatabase() {
+        File databaseFile = new File("identifier.sqlite");
+        if (!databaseFile.exists()) {
+            try (Connection conn = DriverManager.getConnection(URL)) {
+                if (conn != null) {
+                    System.out.println("A new database has been created.");
+                }
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        } else {
+            System.out.println("Database already exists.");
+        }
     }
 
     // Method to create all necessary tables
@@ -89,7 +107,13 @@ public class DatabaseInit {
                 + "    reservation_time REAL NOT NULL\n"
                 + ");";
 
-
+        String createTablesSpecialOffersTable = "CREATE TABLE IF NOT EXISTS special_offers (\n"
+                + "    id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+                + "    offer_name VARCHAR NOT NULL,\n"
+                + "    discount_amount INTEGER NOT NULL,\n"
+                + "    start_date VARCHAR NOT NULL,\n"
+                + "    end_date VARCHAR NOT NULL\n"
+                + ");";
 
         String createIngredientUsageTable = "CREATE TABLE IF NOT EXISTS IngredientUsage (\n"
                 + "    usage_id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
@@ -120,6 +144,7 @@ public class DatabaseInit {
             stmt.execute(createOrderItemsTable);
             stmt.execute(createTablesTable);
             stmt.execute(createTablesReservationsTable);
+            stmt.execute(createTablesSpecialOffersTable);
             stmt.execute(createIngredientUsageTable);
             stmt.execute(createSalesReportsTable);
 

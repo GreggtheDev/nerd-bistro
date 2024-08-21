@@ -6,7 +6,7 @@ import com.restaurant.utility.SoundUtility;
 
 public class Main {
     public static void main(String[] args) {
-
+        DatabaseInit databaseInit = new DatabaseInit();
 }
 }
 
