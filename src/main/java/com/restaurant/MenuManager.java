@@ -10,7 +10,7 @@ public class MenuManager {
 
     private static final String DATABASE_URL = "jdbc:sqlite:identifier.sqlite";
 
-    private Connection connect() {
+    Connection connect() {
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(DATABASE_URL);
