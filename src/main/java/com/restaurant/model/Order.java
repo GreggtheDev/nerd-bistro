@@ -15,7 +15,7 @@ public class Order {
     private List<MenuItem> items;
 
     public enum Status {
-        WAITING, PREPARING, READY
+        WAITING, PREPARING, FINISHED
     }
 
     // Constructor for a new order

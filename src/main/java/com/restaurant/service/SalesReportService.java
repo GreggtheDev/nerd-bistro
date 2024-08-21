@@ -37,7 +37,7 @@ public class SalesReportService {
 
     // Method to generate the daily sales report
     public void generateDailySalesReport(LocalDate date) {
-        List<Order> orders = orderDao.getOrdersByStatus(Order.Status.READY);
+        List<Order> orders = orderDao.getOrdersByStatus(Order.Status.FINISHED);
 
         double totalRevenue = calculateTotalRevenue(orders);
         double grossProfit = calculateGrossProfit(orders);

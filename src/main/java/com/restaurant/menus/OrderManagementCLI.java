@@ -6,6 +6,7 @@ import com.restaurant.model.Order;
 import com.restaurant.model.MenuItem;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -23,7 +24,8 @@ public class OrderManagementCLI {
             System.out.println("3. View Orders by Status");
             System.out.println("4. View All Orders");
             System.out.println("5. Delete Order");
-            System.out.println("6. Back to Main Menu");
+            System.out.println("6. View Finished Orders");
+            System.out.println("7. Back to Main Menu");
             System.out.print("Select an option: ");
             int option = scanner.nextInt();
             scanner.nextLine(); // Consume newline
@@ -45,6 +47,9 @@ public class OrderManagementCLI {
                     deleteOrder();
                     break;
                 case 6:
+                    viewFinishedOrders();
+                    break;
+                case 7:
                     managingOrders = false;
                     break;
                 default:
@@ -58,6 +63,9 @@ public class OrderManagementCLI {
         List<MenuItem> orderItems = new ArrayList<>();
         double totalPrice = 0.0;
         boolean ordering = true;
+
+        // Display the menu before placing an order
+        displayMenu();
 
         while (ordering) {
             System.out.print("Enter the ID of the item to order (or type 0 to finish): ");
@@ -95,20 +103,40 @@ public class OrderManagementCLI {
     }
 
     private void updateOrderStatus() {
+        // Fetch and display all open orders (WAITING or PREPARING)
+        List<Order> openOrders = orderManager.getOrdersByStatus(Order.Status.WAITING);
+        openOrders.addAll(orderManager.getOrdersByStatus(Order.Status.PREPARING));
+
+        if (openOrders.isEmpty()) {
+            System.out.println("There are no open orders to update.");
+            return;
+        }
+
+        System.out.println("Open Orders:");
+        for (Order order : openOrders) {
+            System.out.println(order);
+        }
+
+        // Prompt the user to select an order ID to update
         System.out.print("Enter the Order ID to update: ");
         int orderId = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        scanner.nextLine(); // Consume the newline
 
+        // Display the status options and prompt for the new status
         System.out.println("Choose new status: ");
         for (Order.Status status : Order.Status.values()) {
             System.out.println(status.ordinal() + 1 + ". " + status.name());
         }
         int statusChoice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        scanner.nextLine(); // Consume the newline
 
-        Order.Status newStatus = Order.Status.values()[statusChoice - 1];
-        orderManager.updateOrderStatus(orderId, newStatus);
-        System.out.println("Order status updated successfully.");
+        if (statusChoice >= 1 && statusChoice <= Order.Status.values().length) {
+            Order.Status newStatus = Order.Status.values()[statusChoice - 1];
+            orderManager.updateOrderStatus(orderId, newStatus);
+            System.out.println("Order status updated to " + newStatus.name() + " successfully.");
+        } else {
+            System.out.println("Invalid status choice. Please try again.");
+        }
     }
 
     private void viewOrdersByStatus() {
@@ -146,4 +174,29 @@ public class OrderManagementCLI {
         orderManager.deleteOrder(orderId);
         System.out.println("Order deleted successfully.");
     }
+
+    private void viewFinishedOrders() {
+        List<Order> finishedOrders = orderManager.getOrdersByStatus(Order.Status.FINISHED);
+
+        if (finishedOrders.isEmpty()) {
+            System.out.println("No finished orders.");
+        } else {
+            System.out.println("\n--- Finished Orders ---");
+            for (Order order : finishedOrders) {
+                System.out.println(order);
+            }
+            System.out.println("-----------------------\n");
+        }
+    }
+
+    private void displayMenu() {
+        System.out.println("\n--- Menu ---");
+        List<MenuItem> menuItems = new MenuManager().getMenuItems();
+        for (MenuItem item : menuItems) {
+            System.out.println(item);
+        }
+        System.out.println("------------\n");
+    }
+
+
 }
