@@ -10,7 +10,6 @@ public class MenuManager {
 
     private static final String DATABASE_URL = "jdbc:sqlite:identifier.sqlite";
 
-    // Method to establish a connection to the database
     private Connection connect() {
         Connection conn = null;
         try {
@@ -21,9 +20,8 @@ public class MenuManager {
         return conn;
     }
 
-    // Method to add a new menu item to the database
     public void addMenuItem(MenuItem item) {
-        String sql = "INSERT INTO MenuItems (name, description, prep_time, price, ingredients) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO MenuItems (name, description, prep_time, price, ingredients, category) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = this.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -33,14 +31,14 @@ public class MenuManager {
             pstmt.setInt(3, item.getPrepTime());
             pstmt.setDouble(4, item.getPrice());
             pstmt.setString(5, String.join(",", item.getIngredients()));
+            pstmt.setString(6, item.getCategory());
 
-            pstmt.executeUpdate();
+            pstmt.execute();
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
 
-    // Method to get all menu items from the database
     public List<MenuItem> getMenuItems() {
         List<MenuItem> menuItems = new ArrayList<>();
         String sql = "SELECT * FROM MenuItems";
@@ -55,8 +53,9 @@ public class MenuManager {
                 int prepTime = rs.getInt("prep_time");
                 double price = rs.getDouble("price");
                 String ingredients = rs.getString("ingredients");
+                String category = rs.getString("category");
 
-                MenuItem item = new MenuItem(name, description, prepTime, price, List.of(ingredients.split(",")),);
+                MenuItem item = new MenuItem(name, description, prepTime, price, List.of(ingredients.split(",")), category);
                 menuItems.add(item);
             }
         } catch (SQLException e) {
@@ -66,7 +65,6 @@ public class MenuManager {
         return menuItems;
     }
 
-    // Method to remove a menu item by its name
     public void removeMenuItem(String itemName) {
         String sql = "DELETE FROM MenuItems WHERE name = ?";
 
@@ -80,7 +78,6 @@ public class MenuManager {
         }
     }
 
-    // Method to get a single MenuItem by its name from the database
     public MenuItem getMenuItemByName(String name) {
         String sql = "SELECT * FROM MenuItems WHERE name = ?";
         MenuItem menuItem = null;
@@ -96,8 +93,9 @@ public class MenuManager {
                 int prepTime = rs.getInt("prep_time");
                 double price = rs.getDouble("price");
                 String ingredients = rs.getString("ingredients");
+                String category = rs.getString("category");
 
-                menuItem = new MenuItem(name, description, prepTime, price, List.of(ingredients.split(",")));
+                menuItem = new MenuItem(name, description, prepTime, price, List.of(ingredients.split(",")), category);
             }
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
