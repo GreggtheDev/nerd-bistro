@@ -1,4 +1,4 @@
-package org.example;
+package com.restaurant;
 
 import java.sql.*;
 import java.util.ArrayList;
