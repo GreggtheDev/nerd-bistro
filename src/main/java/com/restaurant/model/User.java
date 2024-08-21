@@ -31,7 +31,7 @@ public class User {
         }
         boolean stop2 = false;
         while (!stop2) {
-            if (role.equals("manager") || role.equals("staff")) {
+            if (role.equalsIgnoreCase("manager") || role.equalsIgnoreCase("staff")) {
                 this.role = role;
                 stop2 = true;
             } else {
