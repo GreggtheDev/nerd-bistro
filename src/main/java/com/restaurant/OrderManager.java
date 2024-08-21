@@ -1,5 +1,7 @@
 package com.restaurant;
 
+import com.restaurant.model.Order;
+import com.restaurant.model.MenuItem;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,6 +104,10 @@ public class OrderManager {
         StringBuilder sb = new StringBuilder();
         for (MenuItem item : items) {
             sb.append(item.getName()).append(",");
+        }
+        // Remove the trailing comma
+        if (sb.length() > 0) {
+            sb.setLength(sb.length() - 1);
         }
         return sb.toString();
     }

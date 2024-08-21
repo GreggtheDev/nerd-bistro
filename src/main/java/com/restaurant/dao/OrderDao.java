@@ -2,10 +2,7 @@ package com.restaurant.dao;
 
 import com.restaurant.model.Order;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +12,7 @@ import java.util.List;
  * and retrieve orders by their status.
  */
 public class OrderDao {
+    private static final String DATABASE_URL = "jdbc:sqlite:identifier.sqlite";
 
     /**
      * Adds a new order to the database.
@@ -23,12 +21,12 @@ public class OrderDao {
      */
     public void addOrder(Order order) {
         String query = "INSERT INTO orders (total_price, status) VALUES (?, ?)";
-        try (Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = DriverManager.getConnection(DATABASE_URL);
              PreparedStatement stmt = connection.prepareStatement(query)) {
 
             // Set the total price and status parameters for the prepared statement
             stmt.setDouble(1, order.getTotalPrice());
-            stmt.setString(2, order.getStatus());
+            stmt.setString(2, order.getStatus().toString());
 
             // Execute the insert statement
             stmt.executeUpdate();
@@ -47,7 +45,7 @@ public class OrderDao {
      */
     public void updateOrderStatus(int orderId, String status) {
         String query = "UPDATE orders SET status = ? WHERE id = ?";
-        try (Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = DriverManager.getConnection(DATABASE_URL);
              PreparedStatement stmt = connection.prepareStatement(query)) {
 
             // Set the new status and the order ID for the prepared statement
@@ -72,7 +70,7 @@ public class OrderDao {
     public List<Order> getOrdersByStatus(String status) {
         String query = "SELECT * FROM orders WHERE status = ?";
         List<Order> orders = new ArrayList<>();
-        try (Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = DriverManager.getConnection(DATABASE_URL);
              PreparedStatement stmt = connection.prepareStatement(query)) {
 
             // Set the status parameter for the prepared statement
@@ -86,7 +84,7 @@ public class OrderDao {
                             rs.getInt("id"),
                             null, // Items would need to be fetched separately
                             rs.getDouble("total_price"),
-                            rs.getString("status")
+                            Order.Status.valueOf(rs.getString("status").toUpperCase())
                     ));
                 }
             }
