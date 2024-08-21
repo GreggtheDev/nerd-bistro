@@ -2,100 +2,109 @@ package com.restaurant;
 
 import com.restaurant.dao.OrderDao;
 import com.restaurant.model.Order;
-import com.restaurant.model.MenuItem;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import com.restaurant.model.MenuManager;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-class OrderManagerTest {
+public class OrderManagerTest {
 
     private OrderManager orderManager;
     private OrderDao mockOrderDao;
     private MenuManager mockMenuManager;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         // Mock the dependencies
         mockOrderDao = mock(OrderDao.class);
         mockMenuManager = mock(MenuManager.class);
 
-        // Create an instance of OrderManager
-        orderManager = new OrderManager();
-
-        // Use reflection or a custom constructor in OrderManager to inject mocks
-        orderManager = Mockito.spy(new OrderManager());
-        Mockito.doReturn(mockOrderDao).when(orderManager).orderDao = mockOrderDao;
-        Mockito.doReturn(mockMenuManager).when(orderManager).menuManager = mockMenuManager;
+        // Inject the mocks into OrderManager
+        orderManager = new OrderManager(mockOrderDao, mockMenuManager);
     }
 
     @Test
-    void testPlaceOrder() {
+    public void testPlaceOrder() {
         Order order = new Order();
+
+        // Act
         orderManager.placeOrder(order);
 
-        // Verify that addOrder was called with the correct order
-        verify(mockOrderDao).addOrder(order);
+        // Verify that orderDao.addOrder was called once with the correct order
+        verify(mockOrderDao, times(1)).addOrder(order);
     }
 
     @Test
-    void testUpdateOrderStatus() {
+    public void testUpdateOrderStatus() {
         int orderId = 1;
-        Order.Status status = Order.Status.COMPLETED;
+        Order.Status newStatus = Order.Status.COMPLETED;
 
-        orderManager.updateOrderStatus(orderId, status);
+        // Act
+        orderManager.updateOrderStatus(orderId, newStatus);
 
-        // Verify that updateOrderStatus was called with the correct arguments
-        verify(mockOrderDao).updateOrderStatus(orderId, status);
+        // Verify that orderDao.updateOrderStatus was called with correct arguments
+        verify(mockOrderDao, times(1)).updateOrderStatus(orderId, newStatus);
     }
 
     @Test
-    void testGetOrdersByStatus() {
+    public void testGetOrdersByStatus() {
         Order.Status status = Order.Status.PENDING;
-        Order order = new Order();
-        order.setItemsAsString("Pizza,Burger");
+        Order order1 = new Order();
+        order1.setItemsAsString("item1,item2");
+        Order order2 = new Order();
+        order2.setItemsAsString("item3,item4");
 
-        when(mockOrderDao.getOrdersByStatus(status)).thenReturn(Arrays.asList(order));
+        // Mock the behavior of orderDao.getOrdersByStatus
+        when(mockOrderDao.getOrdersByStatus(status)).thenReturn(Arrays.asList(order1, order2));
 
+        // Act
         List<Order> orders = orderManager.getOrdersByStatus(status);
 
-        // Verify that getOrdersByStatus was called and items were set correctly
-        verify(mockOrderDao).getOrdersByStatus(status);
-        assertEquals(1, orders.size());
-        assertEquals("Pizza,Burger", orders.get(0).getItemsAsString());
+        // Verify the items were correctly set from string
+        assertEquals(2, orders.size());
+        assertEquals(Arrays.asList("item1", "item2"), orders.get(0).getItems());
+        assertEquals(Arrays.asList("item3", "item4"), orders.get(1).getItems());
+
+        // Verify that orderDao.getOrdersByStatus was called with correct argument
+        verify(mockOrderDao, times(1)).getOrdersByStatus(status);
     }
 
     @Test
-    void testGetAllOrders() {
+    public void testGetAllOrders() {
         Order order1 = new Order();
-        order1.setItemsAsString("Pizza,Burger");
-
+        order1.setItemsAsString("item1,item2");
         Order order2 = new Order();
-        order2.setItemsAsString("Pasta,Salad");
+        order2.setItemsAsString("item3,item4");
 
+        // Mock the behavior of orderDao.getAllOrders
         when(mockOrderDao.getAllOrders()).thenReturn(Arrays.asList(order1, order2));
 
+        // Act
         List<Order> orders = orderManager.getAllOrders();
 
-        // Verify that getAllOrders was called and items were set correctly
-        verify(mockOrderDao).getAllOrders();
+        // Verify the items were correctly set from string
         assertEquals(2, orders.size());
-        assertEquals("Pizza,Burger", orders.get(0).getItemsAsString());
-        assertEquals("Pasta,Salad", orders.get(1).getItemsAsString());
+        assertEquals(Arrays.asList("item1", "item2"), orders.get(0).getItems());
+        assertEquals(Arrays.asList("item3", "item4"), orders.get(1).getItems());
+
+        // Verify that orderDao.getAllOrders was called once
+        verify(mockOrderDao, times(1)).getAllOrders();
     }
 
     @Test
-    void testDeleteOrder() {
+    public void testDeleteOrder() {
         int orderId = 1;
 
+        // Act
         orderManager.deleteOrder(orderId);
 
-        // Verify that deleteOrder was called with the correct order ID
-        verify(mockOrderDao).deleteOrder(orderId);
+        // Verify that orderDao.deleteOrder was called once with the correct orderId
+        verify(mockOrderDao, times(1)).deleteOrder(orderId);
     }
 }

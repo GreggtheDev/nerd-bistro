@@ -8,9 +8,14 @@ import java.util.List;
 
 public class OrderManager {
 
-    public OrderDao orderDao;
-    private OrderDao orderDao = new OrderDao();
-    private MenuManager menuManager = new MenuManager();
+    private OrderDao orderDao;
+    private MenuManager menuManager;
+
+    // Constructor with dependency injection
+    public OrderManager(OrderDao orderDao, MenuManager menuManager) {
+        this.orderDao = orderDao;
+        this.menuManager = menuManager;
+    }
 
     public void placeOrder(Order order) {
         orderDao.addOrder(order);
