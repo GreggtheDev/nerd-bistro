@@ -29,7 +29,8 @@ public class OrderService {
      * @param items The list of menu items to be included in the order.
      */
     public void createOrder(List<MenuItem> items) {
-        Order order = new Order(0, items, calculateTotalPrice(items), "waiting");
+        // Use the Order.Status enum instead of a string
+        Order order = new Order(0, items, calculateTotalPrice(items), Order.Status.WAITING);
         orderDao.addOrder(order);
     }
 

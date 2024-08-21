@@ -1,6 +1,7 @@
-package com.restaurant;
+package com.restaurant.model;
 
 import java.util.List;
+import com.restaurant.model.MenuItem;
 
 public class Order {
     private static int idCounter = 0;  // Static counter to generate unique order IDs
