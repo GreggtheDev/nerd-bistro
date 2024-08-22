@@ -2,6 +2,7 @@ package com.restaurant.menus;
 
 import com.restaurant.MenuManager;
 import com.restaurant.OrderManager;
+import com.restaurant.dao.OrderDao;
 import com.restaurant.model.Order;
 import com.restaurant.model.MenuItem;
 
@@ -11,8 +12,15 @@ import java.util.List;
 import java.util.Scanner;
 
 public class OrderManagementCLI {
-    private static OrderManager orderManager = new OrderManager();
-    private static Scanner scanner = new Scanner(System.in);
+    private OrderManager orderManager;
+    private Scanner scanner = new Scanner(System.in);
+
+    // Constructor to initialize OrderManager with its dependencies
+    public OrderManagementCLI() {
+        OrderDao orderDao = new OrderDao();
+        MenuManager menuManager = new MenuManager();
+        this.orderManager = new OrderManager(orderDao, menuManager);
+    }
 
     public void startOrderManagement() {
         boolean managingOrders = true;
@@ -197,6 +205,4 @@ public class OrderManagementCLI {
         }
         System.out.println("------------\n");
     }
-
-
 }

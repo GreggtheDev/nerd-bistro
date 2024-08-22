@@ -18,11 +18,11 @@ public class OrderManager {
         this.menuManager = menuManager;
     }
 
-    public OrderManager() {
-
-    }
-
     public void placeOrder(Order order) {
+        // Ensure the order and its items are not null
+        if (order == null || order.getItems() == null || order.getItems().isEmpty()) {
+            throw new IllegalArgumentException("Order or Order Items cannot be null or empty");
+        }
         orderDao.addOrder(order);
     }
 
@@ -72,16 +72,4 @@ public class OrderManager {
 
         return orderDetails;
     }
-
-//    public double getTotalRevenueFromFinishedOrders() {
-//        List<Order> finishedOrders = getOrdersByStatus(Order.Status.FINISHED);
-//        double totalRevenue = 0.0;
-//
-//        for (Order order : finishedOrders) {
-//            totalRevenue += order.getTotalPrice();
-//        }
-//
-//        return totalRevenue;
-//    }
-
 }
