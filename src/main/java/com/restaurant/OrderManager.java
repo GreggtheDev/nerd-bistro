@@ -19,7 +19,6 @@ public class OrderManager {
     }
 
     public void placeOrder(Order order) {
-        // Ensure the order and its items are not null
         if (order == null || order.getItems() == null || order.getItems().isEmpty()) {
             throw new IllegalArgumentException("Order or Order Items cannot be null or empty");
         }
@@ -33,7 +32,8 @@ public class OrderManager {
     public List<Order> getOrdersByStatus(Order.Status status) {
         List<Order> orders = orderDao.getOrdersByStatus(status);
         for (Order order : orders) {
-            order.setItems(order.getItemsFromString(order.getItemsAsString()));
+            List<MenuItem> items = order.getItemsFromString(order.getItemsAsString());
+            order.setItems(items);
         }
         return orders;
     }
@@ -41,7 +41,8 @@ public class OrderManager {
     public List<Order> getAllOrders() {
         List<Order> orders = orderDao.getAllOrders();
         for (Order order : orders) {
-            order.setItems(order.getItemsFromString(order.getItemsAsString()));
+            List<MenuItem> items = order.getItemsFromString(order.getItemsAsString());
+            order.setItems(items);
         }
         return orders;
     }

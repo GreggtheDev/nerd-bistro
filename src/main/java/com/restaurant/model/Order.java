@@ -81,6 +81,15 @@ public class Order {
                 .collect(Collectors.joining(", "));
     }
 
+    // Converts a comma-separated string of item IDs back to a list of MenuItem objects
+    public List<MenuItem> getItemsFromString(String itemsAsString) {
+        MenuManager menuManager = new MenuManager();
+        return itemsAsString.isEmpty() ? List.of() :
+                List.of(itemsAsString.split(",")).stream()
+                        .map(id -> menuManager.getMenuItemById(Integer.parseInt(id)))
+                        .collect(Collectors.toList());
+    }
+
     @Override
     public String toString() {
         return String.format("Order ID: %d, Order Time: %s, Total Price: %.2f, Status: %s, Items: %s",
