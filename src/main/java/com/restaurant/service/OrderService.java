@@ -14,9 +14,9 @@ public class OrderService {
         this.orderManager = orderManager;
     }
 
-    public void createOrder(List<MenuItem> items) {
+    public void createOrder(int tableId, List<MenuItem> items) { // Added tableId parameter
         double totalPrice = calculateTotalPrice(items);
-        Order order = new Order(items, totalPrice, Order.Status.WAITING);
+        Order order = new Order(tableId, items, totalPrice, Order.Status.WAITING); // Using the correct constructor
         orderManager.placeOrder(order);
     }
 

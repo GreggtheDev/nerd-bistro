@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 public class Order {
     private int orderId;
+    private int tableId; // New field for table ID
     private long orderTime; // Time stored in milliseconds
     private double totalPrice;
     private Status status;
@@ -20,7 +21,8 @@ public class Order {
     }
 
     // Constructor for a new order
-    public Order(List<MenuItem> items, double totalPrice, Status status) {
+    public Order(int tableId, List<MenuItem> items, double totalPrice, Status status) {
+        this.tableId = tableId; // Initialize the new field
         this.items = items;
         this.totalPrice = totalPrice;
         this.status = status;
@@ -28,8 +30,9 @@ public class Order {
     }
 
     // Constructor for retrieving an order from the database
-    public Order(int orderId, long orderTime, double totalPrice, Status status, List<MenuItem> items) {
+    public Order(int orderId, int tableId, long orderTime, double totalPrice, Status status, List<MenuItem> items) {
         this.orderId = orderId;
+        this.tableId = tableId; // Initialize the new field
         this.orderTime = orderTime;
         this.totalPrice = totalPrice;
         this.status = status;
@@ -44,6 +47,14 @@ public class Order {
 
     public void setOrderId(int orderId) {
         this.orderId = orderId;
+    }
+
+    public int getTableId() {
+        return tableId;
+    }
+
+    public void setTableId(int tableId) {
+        this.tableId = tableId;
     }
 
     public long getOrderTime() {
@@ -106,6 +117,7 @@ public class Order {
     public String getFormattedOrderDetails() {
         StringBuilder details = new StringBuilder();
         details.append("Order ID: ").append(orderId)
+                .append(", Table ID: ").append(tableId) // Include table ID
                 .append(", Order Time: ").append(getFormattedOrderTime())
                 .append(", Total Price: $").append(String.format("%.2f", totalPrice))
                 .append(", Status: ").append(status)

@@ -1,122 +1,110 @@
 package com.restaurant.service;
 
 import com.restaurant.dao.OrderDao;
-import com.restaurant.model.Order;
 import com.restaurant.model.MenuItem;
+import com.restaurant.model.Order;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class SalesReportService {
 
-    private OrderDao orderDao;
-    private Map<String, Double> costPriceMap;
+    private static OrderDao orderDao;
 
-    // Constructor to initialize the OrderDao and cost price map
-    public SalesReportService(OrderDao orderDao) {
-        this.orderDao = orderDao;
-        this.costPriceMap = initializeCostPriceMap(); // Initialize cost prices
-    }
-
-    // Method to initialize the cost price map
-    private Map<String, Double> initializeCostPriceMap() {
-        Map<String, Double> costPrices = new HashMap<>();
-        // Populate the map with MenuItem names and their corresponding cost prices
-        costPrices.put("Burger", 3.00);
-        costPrices.put("Pizza", 4.50);
-        costPrices.put("Pasta", 2.75);
-        // Add more items as needed
-        return costPrices;
+    static {
+        orderDao = new OrderDao();
+        generateDailySalesReport();  // This will run when the class is loaded, but you might not want it to auto-generate here.
     }
 
     // Method to generate the daily sales report
-    public void generateDailySalesReport(LocalDate date) {
-        List<Order> orders = orderDao.getOrdersByStatus(Order.Status.FINISHED);
+    public static void generateDailySalesReport() {
+        List<Order> orders = orderDao.getAllOrders();
+        double totalRevenue = 0;
+        Map<MenuItem, Integer> itemPopularity = new HashMap<>();
+        Map<String, Double> tableRevenue = new HashMap<>();
+        Map<Integer, Double> orderRevenue = new HashMap<>();
 
-        double totalRevenue = calculateTotalRevenue(orders);
-        double grossProfit = calculateGrossProfit(orders);
-        Map<String, Long> popularItems = calculatePopularItems(orders);
-        Map<String, Double> popularItemsRevenue = calculatePopularItemsRevenue(orders);
-        Map<Integer, Long> tableActivity = calculateTableActivity(orders);
+        // Calculate total revenue, item popularity, and table-wise revenue
+        for (Order order : orders) {
+            double orderTotal = order.getTotalPrice();
+            totalRevenue += orderTotal;
+            orderRevenue.put(order.getOrderId(), orderTotal);
 
-        exportReportToFile(date, totalRevenue, grossProfit, popularItems, popularItemsRevenue, tableActivity);
-    }
+            for (MenuItem item : order.getItems()) {
+                itemPopularity.put(item, itemPopularity.getOrDefault(item, 0) + item.getQuantity());
 
-    // Method to calculate total revenue from the orders
-    private double calculateTotalRevenue(List<Order> orders) {
-        return orders.stream().mapToDouble(Order::getTotalPrice).sum();
-    }
+                // Add the item's contribution to the total revenue from the most popular item
+                tableRevenue.put("Table " + order.getTableId(), tableRevenue.getOrDefault("Table " + order.getTableId(), 0.0) + (item.getPrice() * item.getQuantity()));
+            }
+        }
 
-    // Method to calculate gross profit using the cost price map
-    private double calculateGrossProfit(List<Order> orders) {
-        return orders.stream()
-                .flatMap(order -> order.getItems().stream())
-                .mapToDouble(item -> {
-                    double costPrice = costPriceMap.getOrDefault(item.getName(), 0.0);
-                    return item.getPrice() - costPrice;
-                })
-                .sum();
-    }
+        // Determine the most popular item
+        MenuItem mostPopularItem = itemPopularity.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse(null);
 
-    // Method to calculate the most popular items
-    private Map<String, Long> calculatePopularItems(List<Order> orders) {
-        return orders.stream()
-                .flatMap(order -> order.getItems().stream())
-                .collect(Collectors.groupingBy(MenuItem::getName, Collectors.counting()));
-    }
-
-    // Method to calculate revenue from popular items
-    private Map<String, Double> calculatePopularItemsRevenue(List<Order> orders) {
-        return orders.stream()
-                .flatMap(order -> order.getItems().stream())
-                .collect(Collectors.groupingBy(MenuItem::getName, Collectors.summingDouble(MenuItem::getPrice)));
-    }
-
-    // Method to calculate table activity
-    private Map<Integer, Long> calculateTableActivity(List<Order> orders) {
-        return orders.stream()
-                .collect(Collectors.groupingBy(Order::getOrderId, Collectors.counting()));
-    }
-
-    // Method to export the report to a text file
-    private void exportReportToFile(LocalDate date, double totalRevenue, double grossProfit,
-                                    Map<String, Long> popularItems,
-                                    Map<String, Double> popularItemsRevenue,
-                                    Map<Integer, Long> tableActivity) {
-        String fileName = "SalesReport_" + date.toString() + ".txt";
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            writer.write("Sales Report for " + date.toString() + "\n");
-            writer.write("==============================\n\n");
-
-            writer.write("Total Revenue: $" + totalRevenue + "\n");
-            writer.write("Gross Profit: $" + grossProfit + "\n\n");
-
-            writer.write("Most Popular Items:\n");
-            popularItems.forEach((item, count) -> {
-                try {
-                    writer.write(item + ": " + count + " orders, $" + popularItemsRevenue.get(item) + " revenue\n");
-                } catch (IOException e) {
-                    e.printStackTrace();
+        // Calculate the total revenue generated by the most popular item across all orders
+        double revenueFromPopularItem = 0.0;
+        if (mostPopularItem != null) {
+            for (Map.Entry<MenuItem, Integer> entry : itemPopularity.entrySet()) {
+                if (entry.getKey().equals(mostPopularItem)) {
+                    revenueFromPopularItem += entry.getKey().getPrice() * entry.getValue();
                 }
-            });
-            writer.write("\n");
+            }
+        }
 
-            writer.write("Table Activity:\n");
-            tableActivity.forEach((tableId, count) -> {
-                try {
-                    writer.write("Table " + tableId + ": " + count + " orders\n");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
+        // Generate the report string
+        String report = generateReportString(totalRevenue, mostPopularItem, revenueFromPopularItem, tableRevenue, orderRevenue);
 
+        // Display the report
+        System.out.println(report);
+
+        // Export the sales report to a text file
+        exportSalesReport("daily_sales_report.txt", report);
+    }
+
+    // Method to generate the report string
+    private static String generateReportString(double totalRevenue, MenuItem mostPopularItem,
+                                               double revenueFromPopularItem, Map<String, Double> tableRevenue,
+                                               Map<Integer, Double> orderRevenue) {
+        StringBuilder reportBuilder = new StringBuilder();
+
+        reportBuilder.append("Daily Sales Report\n");
+        reportBuilder.append("===================\n");
+        reportBuilder.append("Most Popular Item: ")
+                .append(mostPopularItem != null ? mostPopularItem.getName() : "None").append("\n");
+        reportBuilder.append("Revenue from Most Popular Item: $")
+                .append(String.format("%.2f", revenueFromPopularItem)).append("\n");
+        reportBuilder.append("\nTable-wise Revenue:\n");
+
+        for (Map.Entry<String, Double> entry : tableRevenue.entrySet()) {
+            reportBuilder.append(entry.getKey()).append(": $")
+                    .append(String.format("%.2f", entry.getValue())).append("\n");
+        }
+
+        reportBuilder.append("\nOrder-wise Revenue:\n");
+        for (Map.Entry<Integer, Double> entry : orderRevenue.entrySet()) {
+            reportBuilder.append("Order ID ").append(entry.getKey()).append(": $")
+                    .append(String.format("%.2f", entry.getValue())).append("\n");
+        }
+
+        reportBuilder.append("===================\n");
+        reportBuilder.append("Total Revenue: $").append(String.format("%.2f", totalRevenue)).append("\n");
+        reportBuilder.append("===================\n");
+        reportBuilder.append("End of Report\n");
+
+        return reportBuilder.toString();
+    }
+
+    // Method to export the sales report to a text file
+    private static void exportSalesReport(String reportFileName, String reportContent) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(reportFileName))) {
+            writer.write(reportContent);
         } catch (IOException e) {
             e.printStackTrace();
         }

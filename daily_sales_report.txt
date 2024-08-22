@@ -1,0 +1,21 @@
+Daily Sales Report
+===================
+Most Popular Item: Lasagna
+Revenue from Most Popular Item: $30.00
+
+Table-wise Revenue:
+Table 1: $81.00
+Table 0: $45.00
+Table 2: $27.00
+
+Order-wise Revenue:
+Order ID 1: $45.00
+Order ID 2: $15.00
+Order ID 3: $12.00
+Order ID 4: $42.00
+Order ID 5: $12.00
+Order ID 6: $27.00
+===================
+Total Revenue: $153.00
+===================
+End of Report
