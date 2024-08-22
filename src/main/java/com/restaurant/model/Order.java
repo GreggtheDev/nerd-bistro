@@ -15,7 +15,7 @@ public class Order {
     private List<MenuItem> items;
 
     public enum Status {
-        WAITING, PREPARING, FINISHED
+        WAITING, PREPARING, READY, FINISHED
     }
 
     // Constructor for a new order
@@ -74,22 +74,11 @@ public class Order {
         this.items = items;
     }
 
-    // Converts the list of MenuItem objects to a comma-separated string of item IDs
+    // Converts the list of MenuItem objects to a string showing their names and quantities
     public String getItemsAsString() {
         return items.stream()
-                .map(item -> String.valueOf(item.getId()))
-                .collect(Collectors.joining(","));
-    }
-
-    // Converts a comma-separated string of item IDs back to a list of MenuItem objects
-    public List<MenuItem> getItemsFromString(String itemsAsString) {
-        MenuManager menuManager = new MenuManager();
-        return itemsAsString.isEmpty() ?
-                List.of() :
-                List.of(itemsAsString.split(","))
-                        .stream()
-                        .map(id -> menuManager.getMenuItemById(Integer.parseInt(id)))
-                        .collect(Collectors.toList());
+                .map(item -> item.getName() + " x" + item.getQuantity())
+                .collect(Collectors.joining(", "));
     }
 
     @Override
