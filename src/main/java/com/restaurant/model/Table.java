@@ -1,5 +1,9 @@
 package com.restaurant.model;
 
+import com.restaurant.dao.TableDao;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Table {
     private int tableId;
     private int tableSize;
@@ -63,5 +67,18 @@ public class Table {
     // Method to free up the table
     public void freeTable() {
         this.status = "Available";
+    }
+
+    // Method to get all tables' statuses
+    public static List<String> getAllTablesStatus() {
+        List<String> tableStatuses = new ArrayList<>();
+        TableDao tableDao = new TableDao();
+        List<Table> tables = tableDao.getAllTables();
+
+        for (Table table : tables) {
+            tableStatuses.add("Table ID: " + table.getTableId() + " - Status: " + table.getStatus());
+        }
+
+        return tableStatuses;
     }
 }
