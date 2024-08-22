@@ -102,7 +102,7 @@ public class MenuItem {
     @Override
     public String toString() {
         return String.format(
-                "ID: %d\nCategory: %s\nName: %s\nDescription: %s\nPreparation Time: %d minutes\nPrice: $%.2f\nIngredients: %s\nQuantity: %d\n",
-                id, category, name, description, prepTime, price, ingredients, quantity);
+                "ID: %d\nCategory: %s\nName: %s\nDescription: %s\nPreparation Time: %d minutes\nPrice: $%.2f\nIngredients: %s\n",
+                id, category, name, description, prepTime, price, ingredients);
     }
 }

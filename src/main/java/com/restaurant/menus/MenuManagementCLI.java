@@ -14,11 +14,12 @@ public class MenuManagementCLI {
         boolean managingMenu = true;
 
         while (managingMenu) {
+            System.out.println();
             System.out.println("\nMenu Management");
             System.out.println("1. View Menu");
             System.out.println("2. Add Menu Item");
             System.out.println("3. Remove Menu Item");
-            System.out.println("4. Get Menu Item by Name");
+            System.out.println("4. Edit Menu Item");
             System.out.println("5. Back to Main Menu");
             System.out.print("Select an option: ");
             int option = scanner.nextInt();
@@ -35,7 +36,7 @@ public class MenuManagementCLI {
                     removeMenuItem();
                     break;
                 case 4:
-                    getMenuItemByName();
+                    editMenuItem();
                     break;
                 case 5:
                     managingMenu = false;
@@ -88,13 +89,61 @@ public class MenuManagementCLI {
         System.out.println("Menu item removed successfully.");
     }
 
-    private void getMenuItemByName() {
-        System.out.print("Enter the name of the menu item to view: ");
-        String itemName = scanner.nextLine();
-        MenuItem item = menuManager.getMenuItemByName(itemName);
+    private void editMenuItem() {
+        System.out.println("Current Menu:");
+        viewMenu();  // Display the entire menu
+
+        System.out.print("Enter the ID of the menu item to edit: ");
+        int itemId = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        MenuItem item = menuManager.getMenuItemById(itemId);
 
         if (item != null) {
-            System.out.println(item);
+            System.out.println("Editing Menu Item: " + item.getName());
+            System.out.println("Enter new values (or 0 to keep the current value):");
+
+            System.out.print("Name (" + item.getName() + "): ");
+            String name = scanner.nextLine();
+            if (!name.equals("0")) {
+                item.setName(name);
+            }
+
+            System.out.print("Description (" + item.getDescription() + "): ");
+            String description = scanner.nextLine();
+            if (!description.equals("0")) {
+                item.setDescription(description);
+            }
+
+            System.out.print("Preparation Time (" + item.getPrepTime() + " minutes): ");
+            int prepTime = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+            if (prepTime != 0) {
+                item.setPrepTime(prepTime);
+            }
+
+            System.out.print("Price ($" + item.getPrice() + "): ");
+            double price = scanner.nextDouble();
+            scanner.nextLine(); // Consume newline
+            if (price != 0) {
+                item.setPrice(price);
+            }
+
+            System.out.print("Ingredients (" + String.join(", ", item.getIngredients()) + "): ");
+            String ingredientsInput = scanner.nextLine();
+            if (!ingredientsInput.equals("0")) {
+                List<String> ingredients = List.of(ingredientsInput.split(","));
+                item.setIngredients(ingredients);
+            }
+
+            System.out.print("Category (" + item.getCategory() + "): ");
+            String category = scanner.nextLine();
+            if (!category.equals("0")) {
+                item.setCategory(category);
+            }
+
+            menuManager.updateMenuItem(item);
+            System.out.println("Menu item updated successfully.");
         } else {
             System.out.println("Menu item not found.");
         }

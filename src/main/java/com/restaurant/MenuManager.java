@@ -107,6 +107,26 @@ public class MenuManager {
         return menuItem;
     }
 
+    public void updateMenuItem(MenuItem item) {
+        String sql = "UPDATE MenuItems SET name = ?, description = ?, prep_time = ?, price = ?, ingredients = ?, category = ? WHERE item_id = ?";
+
+        try (Connection conn = this.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, item.getName());
+            pstmt.setString(2, item.getDescription());
+            pstmt.setInt(3, item.getPrepTime());
+            pstmt.setDouble(4, item.getPrice());
+            pstmt.setString(5, String.join(",", item.getIngredients()));
+            pstmt.setString(6, item.getCategory());
+            pstmt.setInt(7, item.getId());
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
     public MenuItem getMenuItemByName(String name) {
         String sql = "SELECT * FROM MenuItems WHERE name = ?";
         MenuItem menuItem = null;
