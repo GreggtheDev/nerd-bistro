@@ -64,6 +64,11 @@ public class User {
         return role;
     }
 
+    @Override
+    public String toString() {
+        return "Username: " + username + ", Role: " + role;
+    }
+
     public static String hashPassword(String password) {
         String generatedPassword = null;
         try {
