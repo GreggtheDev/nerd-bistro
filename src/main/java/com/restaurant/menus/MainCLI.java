@@ -65,8 +65,8 @@ public class MainCLI {
                     System.out.println("Restaurant Management System");
                     System.out.println("1. Menu Management");
                     System.out.println("2. Order Management");
-                    System.out.println("4. Table Management");
-                    System.out.println("5. Get Inventory");
+                    System.out.println("3. Table Management");
+                    System.out.println("4. Get Inventory");
                     System.out.println("0. Exit");
                     System.out.print("Select an option: ");
                     int option = scanner.nextInt();
@@ -91,6 +91,5 @@ public class MainCLI {
                 }
             }
         }
-
     }
 }
