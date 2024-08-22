@@ -1,10 +1,13 @@
 package com.restaurant.dao;
+
 import com.restaurant.model.Table;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TableDao {
 
@@ -45,4 +48,26 @@ public class TableDao {
         }
     }
 
+    // Method to get all tables from the database
+    public List<Table> getAllTables() {
+        String sql = "SELECT * FROM Tables";
+        List<Table> tables = new ArrayList<>();
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("table_id");
+                int size = resultSet.getInt("table_size");
+                String status = resultSet.getString("status");
+
+                tables.add(new Table(id, size, status));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return tables;
+    }
 }

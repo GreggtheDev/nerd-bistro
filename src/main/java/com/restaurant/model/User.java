@@ -19,36 +19,32 @@ public class User {
     public User(String username, String password, String role) {
         UserDAO userDOA = new UserDAO();
         Scanner scanner = new Scanner(System.in);
-//        boolean stop = false;
-//        while (!stop) {
-//            if (userDOA.isUsernameTaken(username)) {
-//                System.out.println("User " + username + " is already taken please choose another one");
-//                username = scanner.nextLine();
-//            } else {
-//                this.username = username;
-//                stop = true;
-//            }
-//        }
+        boolean stop = false;
+        while (!stop) {
+            if (userDOA.isUsernameTaken(username)) {
+                System.out.println("User " + username + " is already taken please choose another one");
+                username = scanner.nextLine();
+            } else {
+                this.username = username;
+                stop = true;
+            }
+        }
+        boolean stop2 = false;
+        while (!stop2) {
+            if (role.equalsIgnoreCase("manager") || role.equalsIgnoreCase("staff")) {
+                this.role = role;
+                stop2 = true;
+            } else {
+                System.out.println("Invalid role, please choose Manager or Staff");
+                role = scanner.nextLine();
+            }
+        }
 
-        this.username = username;
-
-//        boolean stop2 = false;
-//        while (!stop2) {
-//            if (role.equalsIgnoreCase("manager") || role.equalsIgnoreCase("staff")) {
-//                this.role = role;
-//                stop2 = true;
-//            } else {
-//                System.out.println("Invalid role, please choose Manager or Staff");
-//                role = scanner.nextLine();
-//            }
-//        }
-
-        this.role = role;
-
-        this.password = hashPassword(password);
+        this.password = password;
     }
 
     public User() {
+        System.out.println("Please enter a valid username");
 
     }
 
@@ -62,11 +58,6 @@ public class User {
 
     public String getRole() {
         return role;
-    }
-
-    @Override
-    public String toString() {
-        return "Username: " + username + ", Role: " + role;
     }
 
     public static String hashPassword(String password) {

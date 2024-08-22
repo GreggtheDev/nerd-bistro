@@ -19,7 +19,6 @@ public class OrderManager {
     }
 
     public void placeOrder(Order order) {
-        // Ensure the order and its items are not null
         if (order == null || order.getItems() == null || order.getItems().isEmpty()) {
             throw new IllegalArgumentException("Order or Order Items cannot be null or empty");
         }
@@ -30,10 +29,18 @@ public class OrderManager {
         orderDao.updateOrderStatus(orderId, status);
     }
 
+    public void updateOrder(Order order) {
+        if (order == null || order.getItems() == null || order.getItems().isEmpty()) {
+            throw new IllegalArgumentException("Order or Order Items cannot be null or empty");
+        }
+        orderDao.updateOrder(order); // Update the order in the database
+    }
+
     public List<Order> getOrdersByStatus(Order.Status status) {
         List<Order> orders = orderDao.getOrdersByStatus(status);
         for (Order order : orders) {
-            order.setItems(order.getItemsFromString(order.getItemsAsString()));
+            List<MenuItem> items = order.getItemsFromString(order.getItemsAsString());
+            order.setItems(items);
         }
         return orders;
     }
@@ -41,7 +48,8 @@ public class OrderManager {
     public List<Order> getAllOrders() {
         List<Order> orders = orderDao.getAllOrders();
         for (Order order : orders) {
-            order.setItems(order.getItemsFromString(order.getItemsAsString()));
+            List<MenuItem> items = order.getItemsFromString(order.getItemsAsString());
+            order.setItems(items);
         }
         return orders;
     }
@@ -58,6 +66,7 @@ public class OrderManager {
         for (Order order : completedOrders) {
             StringBuilder details = new StringBuilder();
             details.append("Order ID: ").append(order.getOrderId()).append("\n");
+            details.append("Table ID: ").append(order.getTableId()).append("\n");
             details.append("Items:\n");
 
             for (MenuItem item : order.getItems()) {
@@ -71,5 +80,14 @@ public class OrderManager {
         }
 
         return orderDetails;
+    }
+
+    public List<Order> getOrdersByTable(int tableId) {
+        List<Order> orders = orderDao.getOrdersByTable(tableId);
+        for (Order order : orders) {
+            List<MenuItem> items = order.getItemsFromString(order.getItemsAsString());
+            order.setItems(items);
+        }
+        return orders;
     }
 }
