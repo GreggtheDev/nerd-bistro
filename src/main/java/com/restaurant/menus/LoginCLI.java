@@ -12,7 +12,7 @@ public class LoginCLI {
     private static final UserDAO userDAO = new UserDAO();
 
     public LoginCLI() {
-
+        // Empty
     }
 
     public static int validInput(int input, int range) {

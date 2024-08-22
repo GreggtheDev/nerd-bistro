@@ -2,8 +2,8 @@ package com.restaurant.service;
 
 import com.restaurant.dao.TableDao;
 import com.restaurant.model.Table;
-
 import java.util.List;
+
 public class TableService {
     private TableDao tableDao = new TableDao();
 
