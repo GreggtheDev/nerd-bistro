@@ -11,6 +11,10 @@ import java.util.Scanner;
 public class LoginCLI {
     private static final UserDAO userDAO = new UserDAO();
 
+    public LoginCLI() {
+
+    }
+
     public static int validInput(int input, int range) {
         Scanner scanner = new Scanner(System.in);
         boolean stop = false;
@@ -85,7 +89,7 @@ public class LoginCLI {
 
     }
 
-    public static void main(String[] args) {
+    public void LoginMenu() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Are you an existing user?");
         System.out.println("1. Yes\n2. No");

@@ -5,6 +5,7 @@ import java.util.Scanner;
 public class MainCLI {
 
     private static Scanner scanner = new Scanner(System.in);
+    private static LoginCLI loginCLI = new LoginCLI();
     private static MenuManagementCLI menuManagementCLI = new MenuManagementCLI();
     private static OrderManagementCLI orderManagementCLI = new OrderManagementCLI();
 
