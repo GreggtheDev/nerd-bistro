@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 public class Order {
     private int orderId;
@@ -74,25 +75,51 @@ public class Order {
         this.items = items;
     }
 
-    // Converts the list of MenuItem objects to a string showing their names and quantities
+    // Converts the list of MenuItem objects to a comma-separated string of item IDs
     public String getItemsAsString() {
         return items.stream()
-                .map(item -> item.getName() + " x" + item.getQuantity())
-                .collect(Collectors.joining(", "));
+                .map(item -> item.getId() + "x" + item.getQuantity())
+                .collect(Collectors.joining(","));
     }
 
     // Converts a comma-separated string of item IDs back to a list of MenuItem objects
     public List<MenuItem> getItemsFromString(String itemsAsString) {
         MenuManager menuManager = new MenuManager();
-        return itemsAsString.isEmpty() ? List.of() :
-                List.of(itemsAsString.split(",")).stream()
-                        .map(id -> menuManager.getMenuItemById(Integer.parseInt(id)))
-                        .collect(Collectors.toList());
+        List<MenuItem> itemsList = new ArrayList<>();
+        String[] itemsArray = itemsAsString.split(",");
+
+        for (String itemString : itemsArray) {
+            String[] parts = itemString.split("x");
+            int id = Integer.parseInt(parts[0]);
+            int quantity = Integer.parseInt(parts[1]);
+
+            MenuItem item = menuManager.getMenuItemById(id);
+            if (item != null) {
+                item.setQuantity(quantity);
+                itemsList.add(item);
+            }
+        }
+        return itemsList;
+    }
+
+    // Method to format the display of order details, including item names and quantities
+    public String getFormattedOrderDetails() {
+        StringBuilder details = new StringBuilder();
+        details.append("Order ID: ").append(orderId)
+                .append(", Order Time: ").append(getFormattedOrderTime())
+                .append(", Total Price: $").append(String.format("%.2f", totalPrice))
+                .append(", Status: ").append(status)
+                .append(", Items: ");
+        for (MenuItem item : items) {
+            details.append(item.getName())
+                    .append(" x").append(item.getQuantity())
+                    .append(", ");
+        }
+        return details.toString().replaceAll(", $", "");
     }
 
     @Override
     public String toString() {
-        return String.format("Order ID: %d, Order Time: %s, Total Price: %.2f, Status: %s, Items: %s",
-                orderId, getFormattedOrderTime(), totalPrice, status, getItemsAsString());
+        return getFormattedOrderDetails();
     }
 }
