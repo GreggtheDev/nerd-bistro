@@ -1,6 +1,6 @@
 package com.restaurant.menus;
 
-import com.restaurant.DatabaseInit;
+
 import com.restaurant.dao.UserDAO;
 import com.restaurant.model.User;
 
@@ -89,7 +89,7 @@ public class LoginCLI {
 
     }
 
-    public void LoginMenu() {
+    public User loginMenu() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Are you an existing user?");
         System.out.println("1. Yes\n2. No");
@@ -105,7 +105,7 @@ public class LoginCLI {
                 break;
         }
         System.out.println(user.toString());
-
+        return user;
 
     }
 }
