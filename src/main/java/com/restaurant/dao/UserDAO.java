@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static com.restaurant.model.User.hashPassword;
+
 
 public class UserDAO {
     private static final String DATABASE_URL = "jdbc:sqlite:identifier.sqlite";
@@ -62,5 +64,27 @@ public class UserDAO {
         }
 
         return isTaken;
+    }
+
+    public User validateUser(String username, String password) {
+        String sql = "SELECT * FROM Users WHERE username = ? AND hashed_password = ?";
+        User user = null;
+
+        try {
+            Connection conn = DriverManager.getConnection(DATABASE_URL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                user = new User(rs.getString("username"), rs.getString("hashed_password"), rs.getString("role"));
+            }
+            pstmt.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return user;
     }
 }
