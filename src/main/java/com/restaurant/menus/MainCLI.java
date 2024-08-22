@@ -1,5 +1,7 @@
 package com.restaurant.menus;
 
+import com.restaurant.DatabaseInit;
+
 import java.util.Scanner;
 
 public class MainCLI {
@@ -9,6 +11,7 @@ public class MainCLI {
     private static OrderManagementCLI orderManagementCLI = new OrderManagementCLI();
 
     public static void main(String[] args) {
+        DatabaseInit databaseInit = new DatabaseInit();
         boolean running = true;
 
         while (running) {
