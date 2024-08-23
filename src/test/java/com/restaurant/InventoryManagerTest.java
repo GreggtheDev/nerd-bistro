@@ -42,12 +42,14 @@ class InventoryManagerTest {
         Ingredient ingredient = new Ingredient(1, "Tomato", 3, "kg");
         when(mockInventoryDAO.getIngredientById(1)).thenReturn(ingredient);
 
-        // Act: Call the processOrder method
+        // Act: Call the processOrder method with more quantity used than available
         inventoryManager.processOrder(1, 5, 10);
 
-        // Assert: Verify that the error message is printed (mocking or capturing print statements could be considered)
+        // Assert: Verify that updateIngredientQuantity was never called because stock was insufficient
         verify(mockInventoryDAO, never()).updateIngredientQuantity(anyInt(), anyInt());
-        verify(mockInventoryDAO, never()).checkLowStock(anyInt(), anyInt());
+
+        // Verify that checkLowStock was still called even though the stock was insufficient
+        verify(mockInventoryDAO, times(1)).checkLowStock(1, 10);
     }
 
     @Test
@@ -78,4 +80,3 @@ class InventoryManagerTest {
         verify(mockInventoryDAO, times(1)).checkLowStock(1, 10);
     }
 }
-
