@@ -11,6 +11,8 @@ public class MainCLI {
     private static LoginCLI loginCLI = new LoginCLI();
     private static MenuManagementCLI menuManagementCLI = new MenuManagementCLI();
     private static OrderManagementCLI orderManagementCLI = new OrderManagementCLI();
+    private static SalesReportCLI SalesReportCLI = new SalesReportCLI();
+    private static TableCli TableCli = new TableCli();
     private static InventoryCLI inventoryCLI = new InventoryCLI();
 
     public static void main(String[] args) {
@@ -44,10 +46,10 @@ public class MainCLI {
                             orderManagementCLI.startOrderManagement();
                             break;
                         case 3:
-                            System.out.println("Sales stuff");
+                            SalesReportCLI.startSalesReport();
                             break;
                         case 4:
-                            System.out.println("table stuff");
+                            TableCli.start();
                             break;
                         case 5:
                             inventoryCLI.showMenu();
