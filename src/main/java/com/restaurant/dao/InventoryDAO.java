@@ -53,6 +53,44 @@ public class InventoryDAO {
         return null;
     }
 
+    // Method to get a single ingredient by Name
+    public Ingredient getIngredientByName(String ingredientName) {
+        String sql = "SELECT * FROM Ingredients WHERE ingredient_name = ?";
+        try (Connection connection = DriverManager.getConnection(DATABASE_URL);
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, ingredientName);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return new Ingredient(
+                            resultSet.getInt("ingredient_id"),
+                            resultSet.getString("ingredient_name"),
+                            resultSet.getInt("quantity"),
+                            resultSet.getString("unit")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    // Method to add a new ingredient to the inventory
+    public void addIngredient(Ingredient ingredient) {
+        String sql = "INSERT INTO Ingredients (ingredient_name, quantity, unit) VALUES (?, ?, ?)";
+        try (Connection connection = DriverManager.getConnection(DATABASE_URL);
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, ingredient.getName());
+            statement.setInt(2, ingredient.getQuantity());
+            statement.setString(3, ingredient.getUnit());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     // Method to update the quantity of an ingredient
     public void updateIngredientQuantity(int ingredientId, int newQuantity) {
         String sql = "UPDATE Ingredients SET quantity = ? WHERE ingredient_id = ?";
