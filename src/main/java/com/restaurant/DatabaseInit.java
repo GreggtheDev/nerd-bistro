@@ -83,6 +83,7 @@ public class DatabaseInit {
                 + "    order_id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + "    order_time REAL NOT NULL,\n"
                 + "    total_price REAL NOT NULL,\n"
+                + "    table_id INTEGER,\n"
                 + "    status VARCHAR NOT NULL\n"
                 + ");";
 

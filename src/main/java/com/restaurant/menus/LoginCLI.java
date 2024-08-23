@@ -90,21 +90,24 @@ public class LoginCLI {
     }
 
     public User loginMenu() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Are you an existing user?");
-        System.out.println("1. Yes\n2. No");
-        int input = validInput(scanner.nextInt(), 2);
-        User user = null;
+//        Scanner scanner = new Scanner(System.in);
+//        System.out.println("Are you an existing user?");
+//        System.out.println("1. Yes\n2. No");
+//        int input = validInput(scanner.nextInt(), 2);
+//        User user = null;
+//
+//        switch (input) {
+//            case 1:
+//                user = login();
+//                break;
+//            case 2:
+//                user = register();
+//                break;
+//        }
+//        System.out.println(user.toString());
 
-        switch (input) {
-            case 1:
-                user = login();
-                break;
-            case 2:
-                user = register();
-                break;
-        }
-        System.out.println(user.toString());
+        User user = null;
+        user = login();
         return user;
 
     }
