@@ -2,11 +2,9 @@ package com.restaurant.dao;
 
 import com.restaurant.model.User;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.restaurant.model.User.hashPassword;
 
@@ -86,5 +84,44 @@ public class UserDAO {
         }
 
         return user;
+    }
+
+    public List<User> listUsers() {
+        String query = "SELECT * FROM Users";
+        List<User> userList = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(DATABASE_URL);
+             Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
+            while (rs.next()) {
+                String username = rs.getString("username");
+                String hashedPassword = rs.getString("hashed_password");
+                String role = rs.getString("role");
+                userList.add(new User(username, hashedPassword, role));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return userList;
+    }
+
+    public void deleteUser(String username) {
+        String sql = "DELETE FROM Users WHERE username = ?";
+        try (Connection conn = DriverManager.getConnection(DATABASE_URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, username);
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("User " + username + " deleted successfully.");
+            } else {
+                System.out.println("User " + username + " not found.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 }

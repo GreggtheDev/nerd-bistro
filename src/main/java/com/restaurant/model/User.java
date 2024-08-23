@@ -1,15 +1,7 @@
 package com.restaurant.model;
 
-import com.restaurant.dao.UserDAO;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Scanner;
-
-/** This is a POJO for User in nerdBistro
- *
- * @author cjgarcia12
- */
 
 public class User {
     private String username;
@@ -17,35 +9,9 @@ public class User {
     private String role;
 
     public User(String username, String password, String role) {
-        UserDAO userDOA = new UserDAO();
-        Scanner scanner = new Scanner(System.in);
-        boolean stop = false;
-        while (!stop) {
-            if (userDOA.isUsernameTaken(username)) {
-                System.out.println("User " + username + " is already taken please choose another one");
-                username = scanner.nextLine();
-            } else {
-                this.username = username;
-                stop = true;
-            }
-        }
-        boolean stop2 = false;
-        while (!stop2) {
-            if (role.equalsIgnoreCase("manager") || role.equalsIgnoreCase("staff")) {
-                this.role = role;
-                stop2 = true;
-            } else {
-                System.out.println("Invalid role, please choose Manager or Staff");
-                role = scanner.nextLine();
-            }
-        }
-
+        this.username = username;
         this.password = password;
-    }
-
-    public User() {
-        System.out.println("Please enter a valid username");
-
+        this.role = role;
     }
 
     public String getUsername() {

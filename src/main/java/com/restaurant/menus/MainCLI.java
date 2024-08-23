@@ -14,6 +14,7 @@ public class MainCLI {
     private static SalesReportCLI SalesReportCLI = new SalesReportCLI();
     private static TableCli TableCli = new TableCli();
     private static InventoryCLI inventoryCLI = new InventoryCLI();
+    private static UserManagementCLI userManagementCLI = new UserManagementCLI(); // Added UserManagementCLI
 
     public static void main(String[] args) {
         DatabaseInit databaseInit = new DatabaseInit();
@@ -26,13 +27,15 @@ public class MainCLI {
                     boolean running = true;
 
                     while (running) {
+                        System.out.println();
                         System.out.println("Restaurant Management System");
                         System.out.println("1. Menu Management");
                         System.out.println("2. Order Management");
                         System.out.println("3. Sales Report");
                         System.out.println("4. Table Management");
                         System.out.println("5. Inventory Management");
-                        System.out.println("6. Logout");
+                        System.out.println("6. User Management");
+                        System.out.println("7. Logout");
                         System.out.println("0. Exit");
                         System.out.print("Select an option: ");
                         int option = scanner.nextInt();
@@ -59,9 +62,11 @@ public class MainCLI {
                                 inventoryCLI.showMenu();
                                 break;
                             case 6:
+                                userManagementCLI.startUserManagement();
+                                break;
+                            case 7:
                                 running = false;
-
-
+                                break;
                             default:
                                 System.out.println("Invalid option. Please try again.");
                                 break;
