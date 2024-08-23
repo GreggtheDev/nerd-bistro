@@ -79,9 +79,9 @@ The Restaurant Management System is a command-line interface (CLI) application d
    ```
 
 5. **Run the Application:**
-   - Run the `Main.java` file from your IDE or command line.
+   - Run the `MainCLI.java` file from your IDE or command line.
    ```bash
-   java -cp target/restaurant-management-system-1.0-SNAPSHOT.jar com.restaurant.Main
+   java -cp target/restaurant-management-system-1.0-SNAPSHOT.jar com.restaurant.menus.MainCLI
    ```
 
 ## Usage
