@@ -1,13 +1,16 @@
 package com.restaurant.menus;
 
 import com.restaurant.MenuManager;
+import com.restaurant.dao.InventoryDAO;
 import com.restaurant.model.MenuItem;
+import com.restaurant.model.Ingredient;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class MenuManagementCLI {
     private static MenuManager menuManager = new MenuManager();
+    private static InventoryDAO inventoryDAO = new InventoryDAO(); // Added InventoryDAO
     private static Scanner scanner = new Scanner(System.in);
 
     public void startMenuManagement() {
@@ -77,9 +80,13 @@ public class MenuManagementCLI {
         System.out.print("Enter category (Breakfast, Lunch, Dinner): ");
         String category = scanner.nextLine();
 
+        // Add new menu item
         MenuItem newItem = new MenuItem(name, description, prepTime, price, ingredients, category);
         menuManager.addMenuItem(newItem);
         System.out.println("Menu item added successfully.");
+
+        // Populate ingredients in InventoryDAO
+        populateIngredientsInInventory(ingredients);
     }
 
     private void removeMenuItem() {
@@ -134,6 +141,7 @@ public class MenuManagementCLI {
             if (!ingredientsInput.equals("0")) {
                 List<String> ingredients = List.of(ingredientsInput.split(","));
                 item.setIngredients(ingredients);
+                populateIngredientsInInventory(ingredients); // Populate any new ingredients in inventory
             }
 
             System.out.print("Category (" + item.getCategory() + "): ");
@@ -146,6 +154,21 @@ public class MenuManagementCLI {
             System.out.println("Menu item updated successfully.");
         } else {
             System.out.println("Menu item not found.");
+        }
+    }
+
+    // Method to populate ingredients in the InventoryDAO
+    private void populateIngredientsInInventory(List<String> ingredients) {
+        for (String ingredientName : ingredients) {
+            Ingredient existingIngredient = inventoryDAO.getIngredientByName(ingredientName.trim());
+            if (existingIngredient == null) {
+                // If the ingredient does not exist, add it with a default quantity
+                Ingredient newIngredient = new Ingredient(0, ingredientName.trim(), 100, "unit"); // Default quantity and unit
+                inventoryDAO.addIngredient(newIngredient);
+                System.out.println("Ingredient " + ingredientName + " added to inventory.");
+            } else {
+                System.out.println("Ingredient " + ingredientName + " already exists in inventory.");
+            }
         }
     }
 }
