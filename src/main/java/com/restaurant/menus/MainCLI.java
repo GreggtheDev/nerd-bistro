@@ -17,81 +17,94 @@ public class MainCLI {
 
     public static void main(String[] args) {
         DatabaseInit databaseInit = new DatabaseInit();
-        User currUser = loginCLI.loginMenu();
+        boolean applicationRunning = true;
+        while (applicationRunning) {
+            User currUser = loginCLI.loginMenu();
 
-        if (currUser != null) {
-            if (currUser.getRole().equalsIgnoreCase("manager")) {
-                boolean running = true;
+            if (currUser != null) {
+                if (currUser.getRole().equalsIgnoreCase("manager")) {
+                    boolean running = true;
 
-                while (running) {
-                    System.out.println("Restaurant Management System");
-                    System.out.println("1. Menu Management");
-                    System.out.println("2. Order Management");
-                    System.out.println("3. Sales Report");
-                    System.out.println("4. Table Management");
-                    System.out.println("5. Inventory Management");
-                    System.out.println("0. Exit");
-                    System.out.print("Select an option: ");
-                    int option = scanner.nextInt();
-                    scanner.nextLine(); // Consume newline
+                    while (running) {
+                        System.out.println("Restaurant Management System");
+                        System.out.println("1. Menu Management");
+                        System.out.println("2. Order Management");
+                        System.out.println("3. Sales Report");
+                        System.out.println("4. Table Management");
+                        System.out.println("5. Inventory Management");
+                        System.out.println("6. Logout");
+                        System.out.println("0. Exit");
+                        System.out.print("Select an option: ");
+                        int option = scanner.nextInt();
+                        scanner.nextLine(); // Consume newline
 
-                    switch (option) {
-                        case 0:
-                            running = false;
-                            break;
-                        case 1:
-                            menuManagementCLI.startMenuManagement();
-                            break;
-                        case 2:
-                            orderManagementCLI.startOrderManagement();
-                            break;
-                        case 3:
-                            SalesReportCLI.startSalesReport();
-                            break;
-                        case 4:
-                            TableCli.start();
-                            break;
-                        case 5:
-                            inventoryCLI.showMenu();
+                        switch (option) {
+                            case 0:
+                                applicationRunning = false;
+                                running = false;
+                                break;
+                            case 1:
+                                menuManagementCLI.startMenuManagement();
+                                break;
+                            case 2:
+                                orderManagementCLI.startOrderManagement();
+                                break;
+                            case 3:
+                                SalesReportCLI.startSalesReport();
+                                break;
+                            case 4:
+                                TableCli.start();
+                                break;
+                            case 5:
+                                inventoryCLI.showMenu();
+                                break;
+                            case 6:
+                                running = false;
 
 
-                        default:
-                            System.out.println("Invalid option. Please try again.");
-                            break;
+                            default:
+                                System.out.println("Invalid option. Please try again.");
+                                break;
+                        }
                     }
-                }
-            } else if (currUser.getRole().equalsIgnoreCase("staff")) {
-                boolean running = true;
+                } else if (currUser.getRole().equalsIgnoreCase("staff")) {
+                    boolean running = true;
 
-                while (running) {
-                    System.out.println("Restaurant Management System");
-                    System.out.println("1. Menu Management");
-                    System.out.println("2. Order Management");
-                    System.out.println("3. Table Management");
-                    System.out.println("4. Get Inventory");
-                    System.out.println("0. Exit");
-                    System.out.print("Select an option: ");
-                    int option = scanner.nextInt();
-                    scanner.nextLine(); // Consume newline
+                    while (running) {
+                        System.out.println("Restaurant Management System");
+                        System.out.println("1. Menu Management");
+                        System.out.println("2. Order Management");
+                        System.out.println("3. Table Management");
+                        System.out.println("4. Get Inventory");
+                        System.out.println("5. Logout");
+                        System.out.println("0. Exit");
+                        System.out.print("Select an option: ");
+                        int option = scanner.nextInt();
+                        scanner.nextLine(); // Consume newline
 
-                    switch (option) {
-                        case 0:
-                            running = false;
-                            break;
-                        case 1:
-                            menuManagementCLI.startMenuManagement();
-                            break;
-                        case 2:
-                            orderManagementCLI.startOrderManagement();
-                            break;
-
-
-                        default:
-                            System.out.println("Invalid option. Please try again.");
-                            break;
+                        switch (option) {
+                            case 0:
+                                applicationRunning = false;
+                                running = false;
+                                break;
+                            case 1:
+                                menuManagementCLI.startMenuManagement();
+                                break;
+                            case 2:
+                                orderManagementCLI.startOrderManagement();
+                                break;
+                            case 5:
+                                running = false;
+                                break;
+                            default:
+                                System.out.println("Invalid option. Please try again.");
+                                break;
+                        }
                     }
                 }
             }
         }
+
+        System.out.println("Exiting System...");
     }
 }
